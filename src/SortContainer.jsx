@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { randomizeArray } from './helpers/randomizeArray';
-import { sortByName, sortByAttribute } from './helpers/sortMethods';
+import { sortByAttribute } from './helpers/sortMethods';
 import { gameArray } from './constants/sampleArrays';
 
 export const SortContainer = () => {
@@ -25,6 +25,16 @@ export const SortContainer = () => {
         setSortMethod('alphaGenre');
     };
 
+    const handleScoreSort = () => {
+        setLoading(true);
+        setSortMethod('highScore');
+    };
+
+    const handleArrayReset = () => {
+        setLoading(true);
+        setSortMethod('default');
+    };
+
     useEffect(() => {
         if(sortMethod === 'random') {
             const randomArray = randomizeArray(renderArray);
@@ -33,7 +43,7 @@ export const SortContainer = () => {
         } 
 
         if (sortMethod === 'alphaTitle') {
-            const sorted = sortByName(renderArray);
+            const sorted = sortByAttribute(renderArray, 'title');
             setRenderArray(sorted);
             setLoading(false);
         }
@@ -44,7 +54,20 @@ export const SortContainer = () => {
             setLoading(false);
         }
 
+        if(sortMethod === 'highScore') {
+            const sorted = sortByAttribute(renderArray, 'score');
+            setRenderArray(sorted);
+            setLoading(false);
+        }
+
+        if(sortMethod === 'default') {
+            const original = [...gameArray];
+            setRenderArray(original);
+            setLoading(false);
+        }
+
     }, [loading, sortMethod]);
+
 
     return(
         <div>
@@ -58,8 +81,11 @@ export const SortContainer = () => {
                 <button disabled={sortMethod === 'alphaGenre'} onClick={handleGenreSort}>
                     {'Sort By Genre (A -> Z)'}
                 </button>
-                <button disabled>
+                <button disabled={sortMethod === 'highScore'} onClick={handleScoreSort}>
                     {'Sort By Score (high -> low)'}
+                </button>
+                <button disabled={sortMethod === 'default'} onClick={handleArrayReset}>
+                    Reset to Default
                 </button>
             </div>
             <table className="gameTable">

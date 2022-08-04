@@ -10,7 +10,11 @@ export const sortByAttribute = (array, attribute) => {
         if(!attributeA && attributeB) return -1;
         if(attributeA && !attributeB) return 1;
 
-        return attributeA.localeCompare(attributeB);
+        if(typeof attributeA === 'number' && typeof attributeB === 'number') {
+            return attributeB - attributeA;
+        } else {
+            return attributeA.localeCompare(attributeB);
+        }
     });
 };
 
