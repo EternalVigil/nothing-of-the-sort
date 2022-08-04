@@ -44,14 +44,29 @@
   border: 1px solid black;
 }
 
-.gameTable > tr {
+.tableRow {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
+  padding: 4px 0;
 }
 
-.gameTable > tr > td {
+.tableRow:nth-child(even) {
+  background-color: #d0d0d0;
+}
+
+.tableRow:not(:last-child) {
+  border-bottom: 1px solid grey;
+}
+
+.tableHeader {
+  display: inline-flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.tableCell {
   display: inline-flex;
   justify-content: center;
   flex: 1;

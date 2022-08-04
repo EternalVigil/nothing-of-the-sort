@@ -68,6 +68,9 @@ export const SortContainer = () => {
 
     }, [loading, sortMethod]);
 
+    // TODO - assumes identical structure of game entities / could leave out columns if asymmetric
+    const gameObj = gameArray[0];
+    const objKeys = Object.keys(gameObj);
 
     return(
         <div>
@@ -90,15 +93,25 @@ export const SortContainer = () => {
             </div>
             <table className="gameTable">
                 <tbody>
+                    <tr className="tableRow">
+                        {
+                            objKeys.map((column) => {
+                                const firstLetter = column.substring(0, 1).toUpperCase();
+                                const remaining = column.substring(1, column.length);
+                                const columnName = `${firstLetter}${remaining}`;
+                                return(<th className='tableHeader'>{columnName}</th>)
+                            })
+                        }
+                    </tr>
                 {
                     renderArray.map((entry) => {
                         const { id, title, genre, score } = entry;
                         return(
-                            <tr key={id}>
-                                <td>{id}</td>
-                                <td>{title}</td>
-                                <td>{genre}</td>
-                                <td>{score}</td>
+                            <tr key={id} className="tableRow">
+                                <td className="tableCell">{id}</td>
+                                <td className="tableCell">{title}</td>
+                                <td className="tableCell">{genre}</td>
+                                <td className="tableCell">{score}</td>
                             </tr>
                         );
                     })
