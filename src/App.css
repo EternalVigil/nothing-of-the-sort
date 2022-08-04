@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+.gameTable {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid black;
+}
+
+.gameTable > tr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.gameTable > tr > td {
+  display: inline-flex;
+  justify-content: center;
+  flex: 1;
+}
