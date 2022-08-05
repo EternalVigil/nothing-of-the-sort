@@ -1,76 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { randomizeArray } from './helpers/randomizeArray';
 import { sortByAttribute } from './helpers/sortMethods';
 import { gameArray } from './constants/sampleArrays';
 
 export const SortContainer = () => {
-    const [renderArray, setRenderArray] = useState(gameArray);
     const [sortMethod, setSortMethod] = useState('default');
-    const [loading, setLoading] = useState(false);
 
     // TODO - move sortMethod states to enums file
-
+    // TODO - remove JANK
     const handleRandomize = () => {
-        setLoading(true);
-        setSortMethod('random');
+        if(sortMethod === 'random') {
+            setSortMethod('random-2');
+        } else setSortMethod('random');
     };
 
     const handleAlphaSort = () => {
-        setLoading(true);
         setSortMethod('alphaTitle');
     };
 
     const handleGenreSort = () => {
-        setLoading(true);
         setSortMethod('alphaGenre');
     };
 
     const handleScoreSort = () => {
-        setLoading(true);
         setSortMethod('highScore');
     };
 
     const handleArrayReset = () => {
-        setLoading(true);
         setSortMethod('default');
     };
 
-    useEffect(() => {
-        if(sortMethod === 'random') {
-            const randomArray = randomizeArray(renderArray);
-            setRenderArray(randomArray);
-            setLoading(false);
-        } 
+    const renderArray = [...gameArray];
 
-        if (sortMethod === 'alphaTitle') {
-            const sorted = sortByAttribute(renderArray, 'title');
-            setRenderArray(sorted);
-            setLoading(false);
-        }
+    let newArray = [];
 
-        if(sortMethod === 'alphaGenre') {
-            const sorted = sortByAttribute(renderArray, 'genre');
-            setRenderArray(sorted);
-            setLoading(false);
-        }
+    if(sortMethod === 'random') {
+        newArray = randomizeArray(renderArray);
+    }
 
-        if(sortMethod === 'highScore') {
-            const sorted = sortByAttribute(renderArray, 'score');
-            setRenderArray(sorted);
-            setLoading(false);
-        }
+    if(sortMethod === 'random-2') {
+        newArray = randomizeArray(renderArray);
+    }
 
-        if(sortMethod === 'default') {
-            const original = [...gameArray];
-            setRenderArray(original);
-            setLoading(false);
-        }
+    if(sortMethod === 'alphaTitle') {
+        newArray = sortByAttribute(renderArray, 'title');
+    }
 
-    }, [loading, sortMethod]);
+    if(sortMethod === 'alphaGenre') {
+        newArray = sortByAttribute(renderArray, 'genre');
+    }
+
+    if(sortMethod === 'highScore') {
+        newArray = sortByAttribute(renderArray, 'score');
+    }
+
+    if(sortMethod === 'default') {
+        newArray = [...gameArray];
+    }
 
     // TODO - assumes identical structure of game entities / could leave out columns if asymmetric
     const gameObj = gameArray[0];
-    const objKeys = Object.keys(gameObj);
+    const objKeys = gameObj && Object.keys(gameObj);
 
     return(
         <div>
@@ -99,12 +89,12 @@ export const SortContainer = () => {
                                 const firstLetter = column.substring(0, 1).toUpperCase();
                                 const remaining = column.substring(1, column.length);
                                 const columnName = `${firstLetter}${remaining}`;
-                                return(<th className='tableHeader'>{columnName}</th>)
+                                return(<th key={columnName} className='tableHeader'>{columnName}</th>)
                             })
                         }
                     </tr>
                 {
-                    renderArray.map((entry) => {
+                    newArray.map((entry) => {
                         const { id, title, genre, score } = entry;
                         return(
                             <tr key={id} className="tableRow">
